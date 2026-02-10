@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const multer = require('multer');
 const path = require('path');
 const argon2 = require('argon2');
@@ -34,24 +34,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-app.post('/register', async (req, res) => {
-    const { username, password, role } = req.body;
-    try {
-        const hash = await argon2.hash(password);
-        const query = 'INSERT INTO users (username, password, role) VALUES (?, ?, ?)';
-        db.query(query, [username, hash, role || 'user'], (err, result) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: 'Internal Server Error' });
-            }
-            res.json({ message: 'Registrasi berhasil', id: result.insertId });
-        });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
-});
 
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -109,7 +91,6 @@ app.post('/tickets', (req, res) => {
         res.json({ message: 'Tiket ditambahkan', id: result.insertId });
     });
 });
-
 
 app.post('/orders', (req, res) => {
     const { user_id, ticket_id, quantity } = req.body;
