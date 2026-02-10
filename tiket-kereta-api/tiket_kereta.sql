@@ -31,8 +31,8 @@ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 
 INSERT INTO users (username, password, role) VALUES
-('admin', 'admin123', 'admin'),
-('user1', 'user123', 'user');
+('admin', 'admin123', 'admin'), /* password: Anakhebatjuara */
+('user1', 'user123', 'user'); /* password: user123 */
 
 
 INSERT INTO tickets (train_name, origin, destination, price) VALUES

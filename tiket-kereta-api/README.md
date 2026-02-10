@@ -127,9 +127,9 @@ The application was checking passwords by comparing plain text strings in the da
 2.  **Timing Attacks**: Plain string comparison can be vulnerable to timing attacks.
 
 ### Fix
-Implemented **Argon2** for secure password hashing.
-1.  **Hashing**: Added a `/register` endpoint that hashes passwords using `argon2.hash` before storing them.
-2.  **Verification**: Updated `/login` to retrieval the user record by username and then verify the password using `argon2.verify`.
+Implemented **Bcrypt** for secure password hashing.
+1.  **Hashing**: Added a `/register` endpoint that hashes passwords using `bcrypt.hash` before storing them.
+2.  **Verification**: Updated `/login` to retrieval the user record by username and then verify the password using `bcrypt.compare`.
 
 **Before (Login Logic):**
 ```javascript
@@ -144,7 +144,7 @@ db.query(query, (err, results) => {
 const query = 'SELECT * FROM users WHERE username = ?';
 db.query(query, [username], async (err, results) => {
     const user = results[0];
-    if (await argon2.verify(user.password, password)) {
+    if (await bcrypt.compare(password, user.password)) {
         // Login success
     }
 });

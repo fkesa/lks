@@ -3,10 +3,11 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const multer = require('multer');
 const path = require('path');
-const argon2 = require('argon2');
+const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
 const db = mysql.createConnection({
@@ -54,7 +55,7 @@ app.post('/login', (req, res) => {
         const user = results[0];
 
         try {
-            if (await argon2.verify(user.password, password)) {
+            if (await bcrypt.compare(password, user.password)) {
                 // Prevent password leakage in response
                 const { password, ...userWithoutPassword } = user;
                 res.json({ message: 'Login berhasil', user: userWithoutPassword });
